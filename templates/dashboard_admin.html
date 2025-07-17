@@ -1,0 +1,142 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard Administrador - Barbearia Profissional{% endblock %}
+
+{% block content %}
+<div class="space-y-8">
+    <div class="flex justify-between items-center">
+        <h1 class="text-3xl font-bold text-slate-100">Dashboard Administrador</h1>
+        <div class="flex space-x-4">
+            <a href="{{ url_for('agendamento') }}" 
+               class="btn-primary text-white px-4 py-2 rounded-lg font-medium">
+                Novo Agendamento
+            </a>
+        </div>
+    </div>
+
+    <!-- Cards de Estatísticas -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div class="card p-6 rounded-lg">
+            <div class="flex items-center">
+                <div class="p-3 rounded-full bg-emerald-600 bg-opacity-20">
+                    <svg class="w-8 h-8 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"></path>
+                    </svg>
+                </div>
+                <div class="ml-4">
+                    <p class="text-sm font-medium text-slate-400">Faturamento Total</p>
+                    <p class="text-2xl font-bold text-emerald-400">R$ {{ "%.2f"|format(total_faturamento) }}</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="card p-6 rounded-lg">
+            <div class="flex items-center">
+                <div class="p-3 rounded-full bg-blue-600 bg-opacity-20">
+                    <svg class="w-8 h-8 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                </div>
+                <div class="ml-4">
+                    <p class="text-sm font-medium text-slate-400">Lucro da Barbearia</p>
+                    <p class="text-2xl font-bold text-blue-400">R$ {{ "%.2f"|format(lucro_barbearia) }}</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="card p-6 rounded-lg">
+            <div class="flex items-center">
+                <div class="p-3 rounded-full bg-yellow-600 bg-opacity-20">
+                    <svg class="w-8 h-8 text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                </div>
+                <div class="ml-4">
+                    <p class="text-sm font-medium text-slate-400">Agendamentos Pendentes</p>
+                    <p class="text-2xl font-bold text-yellow-400">{{ agendamentos_pendentes|length }}</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="card p-6 rounded-lg">
+            <div class="flex items-center">
+                <div class="p-3 rounded-full bg-purple-600 bg-opacity-20">
+                    <svg class="w-8 h-8 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                    </svg>
+                </div>
+                <div class="ml-4">
+                    <p class="text-sm font-medium text-slate-400">Funcionários Ativos</p>
+                    <p class="text-2xl font-bold text-purple-400">{{ faturamento_funcionarios|length }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Agendamentos Pendentes -->
+    {% if agendamentos_pendentes %}
+    <div class="card p-6 rounded-lg">
+        <h2 class="text-xl font-bold text-slate-100 mb-4">Agendamentos Pendentes</h2>
+        <div class="overflow-x-auto">
+            <table class="min-w-full table-auto">
+                <thead>
+                    <tr class="bg-slate-800">
+                        <th class="px-6 py-3 text-left text-xs font-medium text-slate-300 uppercase tracking-wider">Cliente</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-slate-300 uppercase tracking-wider">Funcionário</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-slate-300 uppercase tracking-wider">Serviço</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-slate-300 uppercase tracking-wider">Data/Hora</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-slate-300 uppercase tracking-wider">Valor</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-slate-300 uppercase tracking-wider">Ações</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-600">
+                    {% for agendamento in agendamentos_pendentes %}
+                    <tr class="hover:bg-slate-700">
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="flex items-center">
+                                {% if agendamento.cliente_foto %}
+                                <img src="{{ url_for('static', filename=agendamento.cliente_foto) }}" 
+                                     alt="Foto do cliente" 
+                                     class="w-10 h-10 rounded-full object-cover mr-3">
+                                {% endif %}
+                                <div class="text-sm font-medium text-slate-100">{{ agendamento.cliente_nome }}</div>
+                            </div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-300">{{ agendamento.funcionario_nome }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-300">{{ agendamento.servico_nome }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-300">{{ agendamento.data_agendamento }} às {{ agendamento.horario }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-emerald-400">R$ {{ "%.2f"|format(agendamento.valor_total) }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                            <div class="flex space-x-2">
+                                <a href="{{ url_for('confirmar_agendamento', agendamento_id=agendamento.id) }}" 
+                                   class="btn-primary text-white px-3 py-1 rounded text-sm">
+                                    Confirmar
+                                </a>
+                                <a href="{{ url_for('rejeitar_agendamento', agendamento_id=agendamento.id) }}" 
+                                   class="btn-danger text-white px-3 py-1 rounded text-sm">
+                                    Rejeitar
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Faturamento por Funcionário -->
+    <div class="card p-6 rounded-lg">
+        <h2 class="text-xl font-bold text-slate-100 mb-4">Faturamento por Funcionário</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {% for funcionario in faturamento_funcionarios %}
+            <div class="bg-slate-800 p-4 rounded-lg">
+                <h3 class="font-semibold text-slate-100">{{ funcionario.nome }}</h3>
+                <p class="text-2xl font-bold text-emerald-400">R$ {{ "%.2f"|format(funcionario.faturamento) }}</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}

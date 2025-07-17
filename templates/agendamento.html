@@ -1,0 +1,167 @@
+{% extends "base.html" %}
+
+{% block title %}Novo Agendamento - Barbearia Profissional{% endblock %}
+
+{% block content %}
+<div class="max-w-2xl mx-auto space-y-8">
+    <div class="text-center">
+        <h1 class="text-3xl font-bold text-slate-100">Novo Agendamento</h1>
+        <p class="text-slate-400 mt-2">Escolha o serviço, funcionário e horário desejado</p>
+    </div>
+
+    <div class="card p-8 rounded-lg">
+        <form method="POST" class="space-y-6">
+            <!-- Seleção de Serviço -->
+            <div>
+                <label for="servico_id" class="block text-sm font-medium text-slate-300 mb-3">
+                    Escolha o serviço
+                </label>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {% for servico in servicos %}
+                    <div class="relative">
+                        <input type="radio" id="servico_{{ servico.id }}" name="servico_id" value="{{ servico.id }}" 
+                               class="sr-only peer" required>
+                        <label for="servico_{{ servico.id }}" 
+                               class="flex flex-col p-4 bg-slate-800 border border-slate-600 rounded-lg cursor-pointer peer-checked:bg-emerald-600 peer-checked:border-emerald-500 hover:bg-slate-700 transition-all">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <h3 class="font-semibold text-slate-100">{{ servico.nome }}</h3>
+                                    <p class="text-sm text-slate-400">{{ servico.descricao }}</p>
+                                    <p class="text-sm text-slate-400 mt-1">{{ servico.duracao }} min</p>
+                                </div>
+                                <span class="text-lg font-bold text-emerald-400">R$ {{ "%.2f"|format(servico.preco) }}</span>
+                            </div>
+                        </label>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- Seleção de Funcionário -->
+            <div>
+                <label for="funcionario_id" class="block text-sm font-medium text-slate-300 mb-3">
+                    Escolha o funcionário
+                </label>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {% for funcionario in funcionarios %}
+                    <div class="relative">
+                        <input type="radio" id="funcionario_{{ funcionario.id }}" name="funcionario_id" value="{{ funcionario.id }}" 
+                               class="sr-only peer" required>
+                        <label for="funcionario_{{ funcionario.id }}" 
+                               class="flex items-center p-4 bg-slate-800 border border-slate-600 rounded-lg cursor-pointer peer-checked:bg-emerald-600 peer-checked:border-emerald-500 hover:bg-slate-700 transition-all">
+                            {% if funcionario.foto_perfil %}
+                            <img src="{{ url_for('static', filename=funcionario.foto_perfil) }}" 
+                                 alt="Foto do funcionário" 
+                                 class="w-12 h-12 rounded-full object-cover mr-4">
+                            {% else %}
+                            <div class="w-12 h-12 bg-slate-600 rounded-full flex items-center justify-center mr-4">
+                                <span class="text-xl">👤</span>
+                            </div>
+                            {% endif %}
+                            <div>
+                                <h3 class="font-semibold text-slate-100">{{ funcionario.nome }}</h3>
+                            </div>
+                        </label>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- Data e Hora -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <label for="data_agendamento" class="block text-sm font-medium text-slate-300 mb-2">
+                        Data do agendamento
+                    </label>
+                    <input type="date" id="data_agendamento" name="data_agendamento" required 
+                           class="input-field block w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-emerald-500 focus:border-emerald-500 sm:text-sm">
+                </div>
+                
+                <div>
+                    <label for="horario" class="block text-sm font-medium text-slate-300 mb-2">
+                        Horário
+                    </label>
+                    <select id="horario" name="horario" required 
+                            class="input-field block w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-emerald-500 focus:border-emerald-500 sm:text-sm">
+                        <option value="">Selecione um horário</option>
+                        <option value="08:00">08:00</option>
+                        <option value="08:30">08:30</option>
+                        <option value="09:00">09:00</option>
+                        <option value="09:30">09:30</option>
+                        <option value="10:00">10:00</option>
+                        <option value="10:30">10:30</option>
+                        <option value="11:00">11:00</option>
+                        <option value="11:30">11:30</option>
+                        <option value="14:00">14:00</option>
+                        <option value="14:30">14:30</option>
+                        <option value="15:00">15:00</option>
+                        <option value="15:30">15:30</option>
+                        <option value="16:00">16:00</option>
+                        <option value="16:30">16:30</option>
+                        <option value="17:00">17:00</option>
+                        <option value="17:30">17:30</option>
+                        <option value="18:00">18:00</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Informações de Pagamento -->
+            <div class="bg-slate-800 p-4 rounded-lg">
+                <h3 class="font-semibold text-slate-100 mb-2">Informações de Pagamento</h3>
+                <div class="space-y-2 text-sm">
+                    <div class="flex justify-between">
+                        <span class="text-slate-400">Valor do serviço:</span>
+                        <span class="text-slate-100" id="valor-total">R$ 0,00</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-slate-400">Garantia (35% via PIX):</span>
+                        <span class="text-emerald-400" id="valor-garantia">R$ 0,00</span>
+                    </div>
+                    <div class="flex justify-between border-t border-slate-600 pt-2">
+                        <span class="text-slate-400">Valor restante (pago no local):</span>
+                        <span class="text-slate-100" id="valor-restante">R$ 0,00</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Botões -->
+            <div class="flex space-x-4">
+                <button type="submit" 
+                        class="btn-primary flex-1 py-3 px-6 rounded-lg font-medium text-white">
+                    Confirmar Agendamento
+                </button>
+                <a href="{{ url_for('dashboard_cliente') }}" 
+                   class="btn-secondary flex-1 py-3 px-6 rounded-lg font-medium text-white text-center">
+                    Cancelar
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const servicoInputs = document.querySelectorAll('input[name="servico_id"]');
+    const valorTotalEl = document.getElementById('valor-total');
+    const valorGarantiaEl = document.getElementById('valor-garantia');
+    const valorRestanteEl = document.getElementById('valor-restante');
+    
+    servicoInputs.forEach(input => {
+        input.addEventListener('change', function() {
+            if (this.checked) {
+                const label = this.nextElementSibling;
+                const precoText = label.querySelector('.text-emerald-400').textContent;
+                const preco = parseFloat(precoText.replace('R$ ', '').replace(',', '.'));
+                
+                const garantia = preco * 0.35;
+                const restante = preco - garantia;
+                
+                valorTotalEl.textContent = `R$ ${preco.toFixed(2).replace('.', ',')}`;
+                valorGarantiaEl.textContent = `R$ ${garantia.toFixed(2).replace('.', ',')}`;
+                valorRestanteEl.textContent = `R$ ${restante.toFixed(2).replace('.', ',')}`;
+            }
+        });
+    });
+});
+</script>
+{% endblock %}

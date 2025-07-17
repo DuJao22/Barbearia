@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard Cliente - Barbearia Profissional{% endblock %}
+
+{% block content %}
+<div class="space-y-8">
+    <div class="flex justify-between items-center">
+        <h1 class="text-3xl font-bold text-slate-100">Meus Agendamentos</h1>
+        <a href="{{ url_for('agendamento') }}" 
+           class="btn-primary text-white px-6 py-3 rounded-lg font-medium">
+            Novo Agendamento
+        </a>
+    </div>
+
+    <!-- Programa de Fidelidade -->
+    <div class="card p-6 rounded-lg">
+        <h2 class="text-xl font-bold text-slate-100 mb-4">Programa de Fidelidade</h2>
+        <div class="flex items-center justify-between">
+            <div class="flex-1">
+                <p class="text-slate-300 mb-2">Progresso para o próximo corte grátis</p>
+                <div class="w-full bg-slate-700 rounded-full h-2.5">
+                    <div class="progress-bar h-2.5 rounded-full" style="width: {{ fidelidade.progresso }}%"></div>
+                </div>
+                <p class="text-sm text-slate-400 mt-2">{{ fidelidade.cortes_acumulados }} de 10 cortes</p>
+            </div>
+            <div class="ml-6 text-center">
+                <div class="bg-emerald-600 text-white rounded-full w-16 h-16 flex items-center justify-center">
+                    <span class="text-2xl font-bold">{{ fidelidade.cortes_gratuitos }}</span>
+                </div>
+                <p class="text-sm text-slate-400 mt-1">Cortes grátis</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Lista de Agendamentos -->
+    <div class="card p-6 rounded-lg">
+        <h2 class="text-xl font-bold text-slate-100 mb-4">Histórico de Agendamentos</h2>
+        {% if agendamentos %}
+        <div class="overflow-x-auto">
+            <table class="min-w-full table-auto">
+                <thead>
+                    <tr class="bg-slate-800">
+                        <th class="px-6 py-3 text-left text-xs font-medium text-slate-300 uppercase tracking-wider">Funcionário</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-slate-300 uppercase tracking-wider">Serviço</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-slate-300 uppercase tracking-wider">Data/Hora</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-slate-300 uppercase tracking-wider">Status</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-slate-300 uppercase tracking-wider">Valor</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-600">
+                    {% for agendamento in agendamentos %}
+                    <tr class="hover:bg-slate-700">
+                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-slate-100">{{ agendamento.funcionario_nome }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-300">{{ agendamento.servico_nome }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-300">{{ agendamento.data_agendamento }} às {{ agendamento.horario }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
+                                       {% if agendamento.status == 'confirmado' %}bg-green-100 text-green-800{% elif agendamento.status == 'pendente' %}bg-yellow-100 text-yellow-800{% elif agendamento.status == 'finalizado' %}bg-blue-100 text-blue-800{% else %}bg-red-100 text-red-800{% endif %}">
+                                {{ agendamento.status|title }}
+                            </span>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-emerald-400">R$ {{ "%.2f"|format(agendamento.valor_total) }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <p class="text-slate-400 text-center py-8">Você ainda não tem agendamentos. Que tal fazer o primeiro?</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

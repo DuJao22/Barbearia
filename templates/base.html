@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Barbearia Profissional{% endblock %}</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            background-color: #0f172a;
+            color: #f1f5f9;
+        }
+        .btn-primary {
+            background-color: #10b981;
+            transition: all 0.3s ease;
+        }
+        .btn-primary:hover {
+            background-color: #059669;
+            transform: translateY(-2px);
+        }
+        .btn-secondary {
+            background-color: #6366f1;
+            transition: all 0.3s ease;
+        }
+        .btn-secondary:hover {
+            background-color: #4f46e5;
+            transform: translateY(-2px);
+        }
+        .btn-danger {
+            background-color: #ef4444;
+            transition: all 0.3s ease;
+        }
+        .btn-danger:hover {
+            background-color: #dc2626;
+            transform: translateY(-2px);
+        }
+        .card {
+            background-color: #1e293b;
+            border: 1px solid #334155;
+            transition: all 0.3s ease;
+        }
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+        .input-field {
+            background-color: #334155;
+            border: 1px solid #475569;
+            color: #f1f5f9;
+            transition: all 0.3s ease;
+        }
+        .input-field:focus {
+            border-color: #10b981;
+            box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+        }
+        .navbar {
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            border-bottom: 1px solid #334155;
+        }
+        .progress-bar {
+            background: linear-gradient(90deg, #10b981, #059669);
+            border-radius: 9999px;
+            transition: width 0.5s ease;
+        }
+    </style>
+</head>
+<body class="bg-slate-900 text-slate-100 min-h-screen">
+    <!-- Navbar -->
+    <nav class="navbar shadow-lg">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0">
+                        <h1 class="text-2xl font-bold text-emerald-400">✂️ Barbearia Pro</h1>
+                    </div>
+                </div>
+                
+                {% if session.usuario_id %}
+                <div class="flex items-center space-x-4">
+                    <div class="flex items-center space-x-2">
+                        {% if session.foto_perfil %}
+                        <img src="{{ url_for('static', filename=session.foto_perfil) }}" 
+                             alt="Foto de perfil" 
+                             class="w-8 h-8 rounded-full object-cover">
+                        {% endif %}
+                        <span class="text-slate-300">{{ session.nome_usuario }}</span>
+                    </div>
+                    <a href="{{ url_for('logout') }}" 
+                       class="btn-danger text-white px-4 py-2 rounded-lg font-medium">
+                        Sair
+                    </a>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </nav>
+
+    <!-- Flash Messages -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-4">
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }} mb-4 p-4 rounded-lg {% if category == 'success' %}bg-emerald-900 border-emerald-700 text-emerald-100{% elif category == 'danger' %}bg-red-900 border-red-700 text-red-100{% elif category == 'info' %}bg-blue-900 border-blue-700 text-blue-100{% else %}bg-yellow-900 border-yellow-700 text-yellow-100{% endif %}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endwith %}
+
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Footer -->
+    <footer class="mt-16 bg-slate-800 border-t border-slate-700">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+            <div class="text-center text-slate-400">
+                <p>Sistema desenvolvido por <strong class="text-emerald-400">João Layon</strong> ©</p>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

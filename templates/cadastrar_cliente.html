@@ -1,0 +1,94 @@
+{% extends "base.html" %}
+
+{% block title %}Cadastrar Cliente - Barbearia Profissional{% endblock %}
+
+{% block content %}
+<div class="min-h-screen flex items-center justify-center bg-slate-900 py-12 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-md w-full space-y-8">
+        <div>
+            <div class="mx-auto h-12 w-12 flex items-center justify-center rounded-full bg-emerald-600">
+                <span class="text-2xl">👤</span>
+            </div>
+            <h2 class="mt-6 text-center text-3xl font-extrabold text-slate-100">
+                Criar nova conta
+            </h2>
+        </div>
+        
+        <form class="mt-8 space-y-6" method="POST" enctype="multipart/form-data">
+            <div class="space-y-4">
+                <div>
+                    <label for="nome" class="block text-sm font-medium text-slate-300 mb-2">
+                        Nome completo
+                    </label>
+                    <input id="nome" name="nome" type="text" required 
+                           class="input-field block w-full px-3 py-2 border rounded-md placeholder-slate-400 focus:outline-none focus:ring-emerald-500 focus:border-emerald-500 sm:text-sm" 
+                           placeholder="Digite seu nome completo">
+                </div>
+                
+                <div>
+                    <label for="telefone" class="block text-sm font-medium text-slate-300 mb-2">
+                        Telefone
+                    </label>
+                    <input id="telefone" name="telefone" type="text" required 
+                           class="input-field block w-full px-3 py-2 border rounded-md placeholder-slate-400 focus:outline-none focus:ring-emerald-500 focus:border-emerald-500 sm:text-sm" 
+                           placeholder="(11) 99999-9999">
+                </div>
+                
+                <div>
+                    <label for="cpf" class="block text-sm font-medium text-slate-300 mb-2">
+                        CPF
+                    </label>
+                    <input id="cpf" name="cpf" type="text" required 
+                           class="input-field block w-full px-3 py-2 border rounded-md placeholder-slate-400 focus:outline-none focus:ring-emerald-500 focus:border-emerald-500 sm:text-sm" 
+                           placeholder="000.000.000-00">
+                </div>
+                
+                <div>
+                    <label for="senha" class="block text-sm font-medium text-slate-300 mb-2">
+                        Senha
+                    </label>
+                    <input id="senha" name="senha" type="password" required 
+                           class="input-field block w-full px-3 py-2 border rounded-md placeholder-slate-400 focus:outline-none focus:ring-emerald-500 focus:border-emerald-500 sm:text-sm" 
+                           placeholder="Digite sua senha">
+                </div>
+                
+                <div>
+                    <label for="confirmar_senha" class="block text-sm font-medium text-slate-300 mb-2">
+                        Confirmar senha
+                    </label>
+                    <input id="confirmar_senha" name="confirmar_senha" type="password" required 
+                           class="input-field block w-full px-3 py-2 border rounded-md placeholder-slate-400 focus:outline-none focus:ring-emerald-500 focus:border-emerald-500 sm:text-sm" 
+                           placeholder="Confirme sua senha">
+                </div>
+                
+                <div>
+                    <label for="foto_perfil" class="block text-sm font-medium text-slate-300 mb-2">
+                        Foto de perfil (opcional)
+                    </label>
+                    <input id="foto_perfil" name="foto_perfil" type="file" accept="image/*"
+                           class="input-field block w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-emerald-500 focus:border-emerald-500 sm:text-sm">
+                </div>
+            </div>
+
+            <div>
+                <button type="submit" 
+                        class="btn-primary group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500">
+                    <span class="absolute left-0 inset-y-0 flex items-center pl-3">
+                        <svg class="h-5 w-5 text-emerald-300 group-hover:text-emerald-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                            <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd" />
+                        </svg>
+                    </span>
+                    Criar conta
+                </button>
+            </div>
+
+            <div class="text-center">
+                <a href="{{ url_for('login') }}" 
+                   class="text-emerald-400 hover:text-emerald-300 font-medium">
+                    Já tem conta? Faça login
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
